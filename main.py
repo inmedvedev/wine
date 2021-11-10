@@ -1,10 +1,17 @@
+import argparse
 import datetime
+import os
 import pprint
 from collections import defaultdict
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 import pandas
 from jinja2 import Environment, FileSystemLoader, select_autoescape
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-p','--path_to_file', type=str, default=f'{os.getcwd()}/wine.xls')
+args = parser.parse_args()
+path_to_file = args.path_to_file
 
 env = Environment(
     loader=FileSystemLoader('.'),
@@ -14,12 +21,11 @@ env = Environment(
 template = env.get_template('template.html')
 
 
-excel_data_df = pandas.read_excel(
-    'wine3.xls',
+drinks = pandas.read_excel(
+    path_to_file,
     sheet_name='Лист1',
     usecols=['Категория','Название', 'Сорт', 'Цена', 'Картинка', 'Акция'],
-).fillna('')
-drinks = excel_data_df.to_dict(orient='records')
+).fillna('').to_dict(orient='records')
 drink_types = sorted({drink['Категория'] for drink in drinks})
 sorted_drinks = defaultdict(list)
 for drink in drink_types:

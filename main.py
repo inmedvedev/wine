@@ -7,6 +7,8 @@ from http.server import HTTPServer, SimpleHTTPRequestHandler
 import pandas
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+STORE_LAUNCH_YEAR = 1920
+
 parser = argparse.ArgumentParser()
 parser.add_argument('-p','--path_to_file', type=str, default=f'{os.getcwd()}/wine.xls')
 args = parser.parse_args()
@@ -30,7 +32,7 @@ for product in catalog:
     drinks_by_categories[product['Категория']].append(product)
 
 rendered_page = template.render(
-    years=datetime.datetime.now().year - 1920,
+    years=datetime.datetime.now().year - STORE_LAUNCH_YEAR,
     drinks=drinks_by_categories
 )
 

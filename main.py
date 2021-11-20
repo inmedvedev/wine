@@ -12,7 +12,12 @@ STORE_LAUNCH_YEAR = 1920
 
 def create_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument('-p','--path_to_file', type=str, default=f'{os.getcwd()}/wine.xls')
+    parser.add_argument(
+                        '-p',
+                        '--path_to_file',
+                        type=str,
+                        default=f'{os.getcwd()}/wine.xls'
+    )
     args = parser.parse_args()
     path_to_file = args.path_to_file
     return path_to_file
@@ -31,7 +36,7 @@ def get_drinks_by_categories(path_to_file):
     catalog = pandas.read_excel(
         path_to_file,
         sheet_name='Лист1',
-        usecols=['Категория','Название', 'Сорт', 'Цена', 'Картинка', 'Акция'],
+        usecols=['Категория', 'Название', 'Сорт', 'Цена', 'Картинка', 'Акция'],
     ).fillna('').to_dict(orient='records')
     drinks_by_categories = collections.defaultdict(list)
     for product in catalog:
@@ -43,10 +48,10 @@ def render_html(template, drinks_by_categories):
     rendered_page = template.render(
         years=datetime.datetime.now().year - STORE_LAUNCH_YEAR,
         drinks=drinks_by_categories
-)
+    )
     with open('index.html', 'w', encoding="utf8") as file:
         file.write(rendered_page)
-    
+
 
 if __name__ == '__main__':
     path_to_file = create_parser()
